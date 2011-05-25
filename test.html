@@ -19,7 +19,18 @@
 		}
 		
 		$(function() {
-			$('input.tags').tagsInput();
+			$('#tags_1').tagsInput();
+			$('#tags_2').tagsInput({
+				onChange: function(elem, elem_tags)
+				{
+					var languages = ['php','ruby','javascript'];
+					$('.tag', elem_tags).each(function()
+					{
+						if($(this).text().search(new RegExp('\\b(' + languages.join('|') + ')\\b')) >= 0)
+							$(this).css('background-color', 'yellow');
+					});
+				}
+			});
 			
 			var available_tags = [ 
 				"ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++", "Clojure", "COBOL",
@@ -29,7 +40,7 @@
 			
 			// See jQuery Autocomplete for the complete list of Autocomplete options
 			// ( http://jqueryui.com/demos/autocomplete/ )
-			$('#tags_2').tagsInput({
+			$('#tags_3').tagsInput({
 			    autocomplete: {source: available_tags},
 			});
 // Uncomment this line to see the callback functions in action
@@ -47,13 +58,16 @@
 	    <h4>jQuery Tags Input!</h4>
 		<form>
 			<input id="tags_1" type="text" class="tags" value="foo,bar,baz,roffle" />
+			
+			<label>Technologies: (Programming languages in yellow)</label>
+			<input id="tags_2" type="text" class="tags" value="php,ios,javascript,ruby,android,kindle" />
 		</form>
 	</section>
 
 	<section>
 	    <h4>Jquery Tags Input with jQuery UI Autocomplete:</h4>
 		<form>
-			<input id="tags_2" type="text" class="tags" />
+			<input id="tags_3" type="text" class="tags" />
 		</form>
 	</section>
 
