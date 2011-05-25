@@ -107,9 +107,15 @@
 	}
 		
 	jQuery.fn.tagsInput = function(options) { 
+		
+		// If someone is trying to use autocomplete and jQuery Autocomplete doesn't exist,
+		// give them a nice warning
+		if ( options && (options.autocomplete != undefined) && ($().autocomplete == undefined)) {
+			console.warn('You need to include jQuery-UI-Autocomplete to use tagInput\'s autocomplete feature.');
+		}
 	
-		var settings = jQuery.extend({interactive:true,defaultText:'add a tag',minChars:0,width:'300px',height:'100px','hide':true,'delimiter':',',autocomplete:{selectFirst:false},'unique':true,removeWithBackspace:true},options);
-	
+		var settings = jQuery.extend({interactive:true,defaultText:'add a tag',minChars:0,width:'300px',height:'100px','hide':true,'delimiter':',','unique':true,removeWithBackspace:true,autocomplete:{autoFocus:true}},options);
+		
 		this.each(function() { 
 			if (settings.hide) { 
 				$(this).hide();				
@@ -122,7 +128,7 @@
 				real_input: '#'+id,
 				holder: '#'+id+'_tagsinput',
 				input_wrapper: '#'+id+'_addTag',
-				fake_input: '#'+id+'_tag'
+				fake_input: '#'+id+'_tag',
 			},settings);
 	
 	
@@ -166,16 +172,21 @@
 					$(event.data.fake_input).css('color','#000000');		
 				});
 						
-				if (settings.autocomplete_url != undefined) {
-					$(data.fake_input).autocomplete(settings.autocomplete_url,settings.autocomplete).bind('result',data,function(event,data,formatted) {
-						if (data) 
-						{
-							$(event.data.real_input).addTag(formatted,{focus:true,unique:(settings.unique)});
+				if ( (settings.autocomplete.source != undefined) && ($().autocomplete != undefined) ) {
+					$(data.fake_input).autocomplete(settings.autocomplete).bind('autocompleteselect', data, function(event, ui) {
+						if (ui.item) {
+							$(event.data.real_input).addTag(ui.item.value,{focus:true,unique:(settings.unique)});
 						}
+						return false;
 					});
 					
 					$(data.fake_input).bind('blur',data,function(event) {
-						if( $('.ac_results').is(':visible') ) return false;
+						// If the user clicks on the auto-complete box to select their
+						// tag, don't create a tag out of the text fragment that already exists
+						var ac = $(data.fake_input).autocomplete('widget');
+						if( $(ac).css('display') == 'block' ) {
+							return false;
+						}
 						if ( $(event.data.fake_input).val() != $(event.data.fake_input).attr('data-default')) {
 							if((event.data.minChars <= $(event.data.fake_input).val().length) && (!event.data.maxChars || (event.data.maxChars >= $(event.data.fake_input).val().length)))
 								$(event.data.real_input).addTag($(event.data.fake_input).val(),{focus:false,unique:(settings.unique)});						
@@ -203,11 +214,17 @@
 						});
 				
 				}
-				// if user types a comma, create a new tag
+				// if user types the delimiter key or hits enter, create a new tag
 				$(data.fake_input).bind('keypress',data,function(event) { 
 					if (event.which==event.data.delimiter.charCodeAt(0) || event.which==13 ) {
 						if( (event.data.minChars <= $(event.data.fake_input).val().length) && (!event.data.maxChars || (event.data.maxChars >= $(event.data.fake_input).val().length)) )
 							$(event.data.real_input).addTag($(event.data.fake_input).val(),{focus:true,unique:(settings.unique)});
+						
+						// If we have autocomplete, then don't let the autocomplete list 
+						// stay open after a new tag gets made
+						if ($().autocomplete != undefined){
+							$(data.fake_input).autocomplete("close");
+						}
 						
 						return false;
 					}

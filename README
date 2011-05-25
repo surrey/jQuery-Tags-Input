@@ -35,14 +35,11 @@ Then, simply call the tagsInput function on any field that should be treated as 
 
 $('#tags').tagsInput();
 
-If you want to use jQuery.autocomplete, you can pass in a parameter with the autocomplete url.
+If you want to use jQuery.autocomplete, you can pass in a parameter with any extra autocomplete
+options as described on the jQuery Autocomplete page: http://jqueryui.com/demos/autocomplete/.
 
-$('#tags').tagsInput({autocomplete_url:'http://myserver.com/api/autocomplete'});
-
-You can also send in options to the autocomplete plugin, as described here.
-
-$('#tags').tagsInput({    autocomplete_url:'http://myserver.com/api/autocomplete',
-   autocomplete:{selectFirst:true,width:'100px',autoFill:true}
+$('#tags').tagsInput({
+    autocomplete: {source: 'http://myserver.com/api/autocomplete'} 
 });
 
 You can add and remove tags by calling the addTag() and removeTag() functions.
@@ -62,8 +59,7 @@ operate as expected.
 Options
 
 $(selector).tagsInput({
-   'autocomplete_url': url_to_autocomplete_api,
-   'autocomplete': { option: value, option: value},
+   'autocomplete': { source: 'url_to_autocomplete_api' },
    'height':'100px',
    'width':'300px',
    'interactive':true,

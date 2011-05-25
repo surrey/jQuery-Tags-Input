@@ -5,11 +5,14 @@
 	<title>jQuery Tags Input Test Page</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
 	<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-	<script type="text/javascript" src="jquery.tagsinput.js"></script>
-	
-	
+	<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/south-street/jquery-ui.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+	<script src="jquery.tagsinput.min.js"></script>
+
 	<script type="text/javascript">
+		
+		var auto_complete 
 		
 		function onAddTag(tag) {
 			alert("Added a tag: " + tag);
@@ -21,6 +24,17 @@
 		$(function() {
 			$('input.tags').tagsInput();
 			
+			var available_tags = [ 
+				"ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++", "Clojure", "COBOL",
+				"ColdFusion", "Erlang", "Fortran", "Groovy", "Haskell", "Java", "JavaScript",
+				"Lisp", "Perl", "PHP", "Python", "Ruby", "Scala", "Scheme"
+			];
+			
+			// See jQuery Autocomplete for the complete list of Autocomplete options
+			// ( http://jqueryui.com/demos/autocomplete/ )
+			$('#tags_2').tagsInput({
+			    autocomplete: {source: available_tags},
+			});
 // Uncomment this line to see the callback functions in action
 //			$('input.tags').tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag});		
 
@@ -31,13 +45,18 @@
 	</script>
 	
 </head>
-<body>
-	<header>
-		jQuery Tags Input!
-	</header>	
+<body>	
 	<section>	
+	    <h4>jQuery Tags Input!</h4>
 		<form>
 			<input id="tags_1" type="text" class="tags" value="foo,bar,baz,roffle" />
+		</form>
+	</section>
+
+	<section>
+	    <h4>Jquery Tags Input with jQuery UI Autocomplete:</h4>
+		<form>
+			<input id="tags_2" type="text" class="tags" />
 		</form>
 	</section>
 
