@@ -1,8 +1,8 @@
 /*
 
-	jQuery Tags Input Plugin 1.2.4
+	jQuery Tags Input Plugin 1.2.5
 	
-	Copyright (c) 2010 XOXCO, Inc
+	Copyright (c) 2011 XOXCO, Inc
 	
 	Documentation for this plugin lives here:
 	http://xoxco.com/clickable/jquery-tags-input
@@ -38,8 +38,17 @@
 				}
 
 				if (value !='' && skipTag != true) { 
-					
-					$('<span class="tag">'+value + '&nbsp;&nbsp;<a href="#" title="Remove tag" onclick="return $(\'#'+id + '\').removeTag(\'' + escape(value) + '\');">x</a></span>').insertBefore('#'+id+'_addTag');
+                    $('<span>').addClass('tag').append(
+                        $('<span>').text(value).append('&nbsp;&nbsp;'),
+                        $('<a>', {
+                            href  : '#',
+                            title : 'Removing tag',
+                            text  : 'x'
+                        }).click(function () {
+                            return $('#' + id).removeTag(escape(value));
+                        })
+                    ).insertBefore('#' + id + '_addTag');
+
 					tagslist.push(value);
 				
 					$('#'+id+'_tag').val('');
